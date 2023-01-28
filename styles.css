@@ -1,0 +1,144 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  height: 100%;
+}
+
+main {
+  display: grid;
+  grid-template-columns: repeat(12, [col-start] 1fr);
+  min-height: 100vh;
+  grid-gap: 5px;
+  grid-template-rows: 50px 50px;
+}
+
+main > * {
+  grid-column: col-start / span 12;
+}
+
+header {
+  background-color: blue;
+  display: flex;
+  justify-content: space-around;
+}
+
+nav {
+  background-color: blueviolet;
+  display: flex;
+  justify-content: space-around;
+}
+
+nav ul {
+    
+    display: flex;
+    justify-content: space-around;
+    gap: 20px;
+    list-style-type: none;
+  }
+
+.product{
+    display: flex;
+    flex-direction: column;
+
+    height: 300px;
+    width: 250px;
+}
+
+.imagen,.informacion{
+    flex:1;
+}
+.imagen{
+    overflow: hidden;
+   
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.imagen img{
+    width: 110%;
+    height: auto;
+    background-size: fit;
+}
+
+ 
+
+section {
+  background-color: green;
+  min-height: 85vh;
+  display: flex;
+  flex-wrap: wrap;
+  padding: 1em;
+  justify-content: center;
+  gap: 1em;
+}
+
+aside {
+  background-color: black;
+  height: 30vh;
+  color: white;
+}
+
+footer {
+  background-color: red;
+  height: 50px;
+}
+
+@media (min-width: 600px) {
+  aside {
+    grid-column: col-start / 5;
+    grid-row: 3;
+    height: auto;
+  }
+
+  section {
+    grid-column: 5 / 13;
+    grid-row: 3;
+  }
+}
+
+@media (min-width: 1000px) {
+
+    aside {
+        grid-column: col-start / 4;
+        grid-row: 3;
+        height: auto;
+      }
+    
+      section {
+        grid-column: 4 / 13;
+        grid-row: 3;
+      }
+}
+
+@media (min-width: 1400px) {
+
+    aside {
+        grid-column: col-start / 3;
+        grid-row: 3;
+        height: auto;
+      }
+    
+      section {
+        grid-column: 3 / 13;
+        grid-row: 3;
+      }
+}
+
+@media (min-width: 1800px) {
+
+    aside {
+        grid-column: col-start / 2;
+        grid-row: 3;
+        height: auto;
+      }
+    
+      section {
+        grid-column: 2 / 13;
+        grid-row: 3;
+      }
+}
