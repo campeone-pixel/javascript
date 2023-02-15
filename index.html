@@ -4,39 +4,48 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
     <link rel="stylesheet" href="styles.css" />
     <title>Document</title>
   </head>
   <body>
     <main>
-      <header>
-        <div>LOGO</div>
-        <div>LOGIN</div>
+      <header class="encabezado">
+        <div class="logo-empresa">LOGO</div>
+        <div class="boton-login"><a href="login.html">LOGIN</a></div>
       </header>
 
-      <nav>
-        <ul>
-          <li>HOME</li>
-          <li>ABOUT US</li>
-          <li>STORE</li>
-          <li>CONTACT</li>
+      <nav class="menu-navegacion">
+        <ul class="lista-menu">
+          <li class="opcion-menu" id="home">HOME</li>
+          <li class="opcion-menu" id="aboutus">ABOUT US</li>
+          <li class="opcion-menu" id="store">STORE</li>
+          <li class="opcion-menu" id="contact">CONTACT</li>
         </ul>
       </nav>
 
       <aside>
-        <h3>CATEGORIAS</h3>
+        <h3 id="titulo-categoria">CATEGORIAS</h3>
+        <ul class="lista-categorias">
+          <li class="categoria" id="HEROES">HEROES</li>
+          <li class="categoria" id="LLAVEROS">LLAVEROS</li>
+          <li class="categoria" id="MACETAS">MACETAS</li>
+          <li cclass="categoria" id="REGALOS">REGALOS</li>
+          <li cclass="categoria" id="MATES">MATES</li>
 
-        <h6>HEROES</h6>
-        <h6>LLAVEROS</h6>
-        <h6>MACETAS</h6>
-        <h6>REGALOS</h6>
-        <h6>MATES</h6>
+
+        
+
+          
+        </ul>
       </aside>
 
       <section>
-        <div class="product">
 
-          <div class="imagen">
+        <h1 class="titulo-productos">Productos</h1>
+        
+        <div class="product" id="producto-1">
+          <div class="imagen" id="producto-1">
             <img src="https://img.freepik.com/free-vector/shopping-bag-basket-zero-waste-eco-composition-with-text-tag-discount-flying-products-trolley-cart-illustration_1284-61282.jpg?size=626&ext=jpg" alt="">
           </div>
 
@@ -44,12 +53,16 @@
             <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Veritatis perferendis quaerat possimus beatae libero magnam sed tempora natus, assumenda vitae.</p>
           </div>
 
+          <div class="precio">
+            1000
+           </div>
+
           <div class="comprar">
             <button>COMPRAR</button>
           </div>
         </div>
 
-        <div class="product">
+        <div class="product" id="producto-2">
           
           <div class="imagen">
             <img src="https://img.freepik.com/free-vector/shopping-bag-basket-zero-waste-eco-composition-with-text-tag-discount-flying-products-trolley-cart-illustration_1284-61282.jpg?size=626&ext=jpg" alt="">
@@ -57,6 +70,48 @@
 
           <div class="informacion">
             <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Veritatis perferendis quaerat possimus beatae libero magnam sed tempora natus, assumenda vitae.</p>
+          </div>
+
+          <div class="precio">
+           200
+          </div>
+
+          <div class="comprar">
+            <button>COMPRAR</button>
+          </div>
+        </div>
+
+        <div class="product" id="producto-3">
+          
+          <div class="imagen">
+            <img src="https://img.freepik.com/free-vector/shopping-bag-basket-zero-waste-eco-composition-with-text-tag-discount-flying-products-trolley-cart-illustration_1284-61282.jpg?size=626&ext=jpg" alt="">
+          </div>
+
+          <div class="informacion">
+            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Veritatis perferendis quaerat possimus beatae libero magnam sed tempora natus, assumenda vitae.</p>
+          </div>
+
+          <div class="precio">
+           500
+          </div>
+
+          <div class="comprar">
+            <button>COMPRAR</button>
+          </div>
+        </div>
+
+        <div class="product" id="producto-4">
+          
+          <div class="imagen">
+            <img src="https://img.freepik.com/free-vector/shopping-bag-basket-zero-waste-eco-composition-with-text-tag-discount-flying-products-trolley-cart-illustration_1284-61282.jpg?size=626&ext=jpg" alt="">
+          </div>
+
+          <div class="informacion">
+            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Veritatis perferendis quaerat possimus beatae libero magnam sed tempora natus, assumenda vitae.</p>
+          </div>
+
+          <div class="precio">
+           1300
           </div>
 
           <div class="comprar">
@@ -69,7 +124,7 @@
 
     
 
-      <footer>
+      <footer class="footer">
         <h4>ESTE ES UN FOOTER</h4>
       </footer>
     </main>

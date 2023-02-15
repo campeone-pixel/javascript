@@ -26,6 +26,10 @@ header {
   justify-content: space-around;
 }
 
+.boton-login a{
+  color: white;
+}
+
 nav {
   background-color: blueviolet;
   display: flex;
@@ -39,6 +43,11 @@ nav ul {
     gap: 20px;
     list-style-type: none;
   }
+
+.titulo-productos{
+  flex: 1 0 100%;
+  width: 100;
+}
 
 .product{
     display: flex;
@@ -86,6 +95,10 @@ aside {
 footer {
   background-color: red;
   height: 50px;
+}
+
+.agotado{
+  background-color: red;
 }
 
 @media (min-width: 600px) {
