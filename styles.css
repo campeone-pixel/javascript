@@ -80,10 +80,20 @@ section {
   background-color: green;
   min-height: 85vh;
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   padding: 1em;
   justify-content: center;
   gap: 1em;
+}
+.lista_productos, .lista_carrito{
+  flex: 1;
+}
+
+.lista_productos{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2em;
+
 }
 
 aside {
