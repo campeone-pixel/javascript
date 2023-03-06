@@ -1,8 +1,16 @@
 const productos = [];
 
 class Producto {
-	constructor(id, nombre, categoria, descripcion, precio, stock, imagen) {
-		this.id = id;
+	constructor(
+		numero_id,
+		nombre,
+		categoria,
+		descripcion,
+		precio,
+		stock,
+		imagen
+	) {
+		this.numero_id = numero_id;
 		this.nombre = nombre;
 		this.categoria = categoria;
 		this.descripcion = descripcion;
@@ -17,11 +25,12 @@ class Producto {
 }
 
 class itemCarrito {
-	constructor(producto_id, precio, cantidad) {
+	constructor(producto_id, nombre, precio, cantidad, imagen) {
 		this.producto_id = producto_id;
-		this.producto_nombre;
+		this.nombre = nombre;
 		this.precio = precio;
 		this.cantidad = cantidad;
+    this.imagen = imagen;
 		this.actualizarCantidad.bind(this);
 	}
 
@@ -35,17 +44,34 @@ class Carrito {
 		this.id = id;
 		this.itemsCarrito = [];
 		this.agregarItem.bind(this);
+		this.copiarLocalStorage.bind(this);
 		this.eliminarItem.bind(this);
 		this.mostrarCarrito.bind(this);
 		this.existe.bind(this);
 	}
 
+  copiarLocalStorage(itemCarrito){
+    this.itemsCarrito.push(itemCarrito);
+  }
+
 	agregarItem(itemCarrito) {
 		const estaEnCarrito = carrito.existe(itemCarrito.producto_id);
-		if (estaEnCarrito)
-			return itemCarrito.actualizarCantidad(itemCarrito.cantidad);
 
-		this.itemsCarrito.push(itemCarrito);
+		if (estaEnCarrito) {
+			let item = carrito.itemsCarrito.filter((item) => {
+				return item.producto_id === itemCarrito.producto_id;
+			});
+			
+			item[0].actualizarCantidad(1);
+			let json = JSON.stringify(carrito.itemsCarrito);
+
+			localStorage.setItem("carrito", json);
+		} else {
+			this.itemsCarrito.push(itemCarrito);
+			let json = JSON.stringify(carrito.itemsCarrito);
+
+			localStorage.setItem("carrito", json);
+		}
 	}
 	existe(producto_id) {
 		return (
@@ -63,18 +89,10 @@ class Carrito {
 	}
 }
 
-const item1 = new itemCarrito(0, 200, 1);
-const item2 = new itemCarrito(1, 300, 1);
 const carrito = new Carrito();
 
-carrito.agregarItem(item1);
-carrito.agregarItem(item1);
-carrito.agregarItem(item2);
-
-carrito.mostrarCarrito();
-
 function agregarProducto(
-	id,
+	numero_id,
 	nombre,
 	categoria,
 	descripcion,
@@ -83,7 +101,15 @@ function agregarProducto(
 	imagen
 ) {
 	productos.push(
-		new Producto(id, nombre, categoria, descripcion, precio, stock, imagen)
+		new Producto(
+			numero_id,
+			nombre,
+			categoria,
+			descripcion,
+			precio,
+			stock,
+			imagen
+		)
 	);
 }
 
@@ -103,7 +129,7 @@ agregarProducto(
 	"ddddddddqwdddddddddddd",
 	300,
 	10,
-	"imagen0.jpg"
+	"imagen1.jpg"
 );
 agregarProducto(
 	2,
@@ -112,7 +138,7 @@ agregarProducto(
 	"dddddddddddrddd",
 	100,
 	2,
-	"imagen0.jpg"
+	"imagen2.jpg"
 );
 agregarProducto(
 	3,
@@ -121,7 +147,7 @@ agregarProducto(
 	"dddrdddddddddddddddd",
 	1200,
 	5,
-	"imagen0.jpg"
+	"imagen3.jpg"
 );
 agregarProducto(
 	4,
@@ -130,7 +156,7 @@ agregarProducto(
 	"ddddddrdddddddrddddddddddd",
 	123,
 	7,
-	"imagen0.jpg"
+	"imagen4.jpg"
 );
 agregarProducto(
 	5,
@@ -139,7 +165,7 @@ agregarProducto(
 	"dddrdddddddddddd",
 	2354,
 	8,
-	"imagen0.jpg"
+	"imagen5.jpg"
 );
 agregarProducto(
 	6,
@@ -148,7 +174,7 @@ agregarProducto(
 	"ddddddrdddddddd",
 	34,
 	19,
-	"imagen0.jpg"
+	"imagen6.jpg"
 );
 agregarProducto(
 	7,
@@ -157,13 +183,14 @@ agregarProducto(
 	"dddddddrddddddd",
 	666,
 	199,
-	"imagen0.jpg"
+	"imagen7.jpg"
 );
 
 document.addEventListener(
 	"DOMContentLoaded",
 	function () {
 		actualizarVistaProductos();
+    copiarCarritoLocal()
 		actualizarVistaCarrito();
 	},
 	false
@@ -176,44 +203,51 @@ document.querySelectorAll(".categoria").forEach((item) => {
 });
 
 function agregarCarrito(id) {
-	let producto = productos.filter((producto) => {
-		return producto.id === id;
+	let productoAgregar = productos.filter((producto) => {
+		return producto.numero_id === id;
 	});
 
-	cartItem = new itemCarrito(producto.id, producto.precio, 1);
+	let { numero_id, nombre, precio,imagen } = productoAgregar[0];
 
-	carrito.agregarItem(cartItem);
-	let json = JSON.stringify(carrito.itemsCarrito);
+	let item = new itemCarrito(numero_id, nombre, precio, 1,imagen);
 
-	localStorage.setItem("carrito", json);
+	carrito.agregarItem(item);
+	actualizarVistaCarrito();
 }
 
-// localStorage.clear()
 
-function templateCardProductos(id, nombre, descripcion, precio, stock, imagen) {
+
+function templateCardProductos(
+	numero_id,
+	nombre,
+	descripcion,
+	precio,
+	stock,
+	imagen
+) {
 	let html = `
 	<div class="card" style="width: 18rem;">
-  <img class="card-img-top" src='./img/imagen${id}.jpg' alt="Card image cap">
+  <img class="card-img-top" src='./img/${imagen}' alt="Card image cap">
   <div class="card-body">
     <h5 class="card-title">${nombre}</h5>
     <p class="card-text">${descripcion}</p>
 		<div class="precio">Precio: ${precio}</div>
 		<div class="stock">Stock: ${stock}</div>
-    <a href="#" class="btn btn-primary" onclick=agregarCarrito(${id})>COMPRAR</a>
+    <a href="#" class="btn btn-primary" onclick=agregarCarrito(${numero_id})>COMPRAR</a>
   </div>
 </div>`;
 	return html;
 }
 
-function templateCardCarrito(id, nombre, descripcion, precio, stock, imagen) {
+function templateCardCarrito(numero_id, nombre, cantidad, imagen) {
 	let html = `
 	<div class="card" style="width: 18rem;">
-  <img class="card-img-top" src='./img/imagen${id}.jpg' alt="Card image cap">
+  <img class="card-img-top" src='./img/${imagen}' alt="Card image cap">
   <div class="card-body">
     <h5 class="card-title">${nombre}</h5>
     
 		
-		<div class="stock">Stock: ${stock}</div>
+		<div class="stock">Cantidad: ${cantidad}</div>
     
   </div>
 </div>`;
@@ -230,7 +264,7 @@ function actualizarVistaProductos(categoria) {
 
 		for (let producto of productosCategoria) {
 			let html = templateCardProductos(
-				producto.id,
+				producto.numero_id,
 				producto.nombre,
 				producto.descripcion,
 				producto.precio,
@@ -242,7 +276,7 @@ function actualizarVistaProductos(categoria) {
 	} else {
 		for (let producto of productos) {
 			let html = templateCardProductos(
-				producto.id,
+				producto.numero_id,
 				producto.nombre,
 				producto.descripcion,
 				producto.precio,
@@ -254,23 +288,42 @@ function actualizarVistaProductos(categoria) {
 	}
 }
 
-function actualizarVistaCarrito() {
-	let json = JSON.stringify(carrito.itemsCarrito);
+function copiarCarritoLocal(){
+  let carritoLS = localStorage.getItem("carrito");
+	if (carritoLS === null) {
+		localStorage.setItem("carrito", JSON.stringify(carrito.itemsCarrito));
+	} else {
+		let parseCarritoLS = JSON.parse(carritoLS);
 
-	localStorage.setItem("carrito", json);
+		for (let itemParse of parseCarritoLS) {
+     
+			let item = new itemCarrito(
+				itemParse.producto_id,
+				itemParse.nombre,
+				itemParse.precio,
+				itemParse.cantidad,
+        itemParse.imagen
+			);
+			
+     
+			carrito.copiarLocalStorage(item);
+		}
+		
+	}
+}
+
+function actualizarVistaCarrito() {
 	let contenedor = document.querySelector(".lista_carrito");
 	contenedor.innerHTML = `<h1 class="titulo-carrito">Carrito</h1>`;
-	let carritoLS = localStorage.getItem("carrito");
-	let parseCarritoLS = JSON.parse(carritoLS);
 
-	if (parseCarritoLS.length > 0) {
-		for (let producto of parseCarritoLS) {
+
+
+	if (carrito.itemsCarrito.length > 0) {
+		for (let producto of carrito.itemsCarrito) {
 			let html = templateCardCarrito(
-				producto.id,
+				producto.numero_id,
 				producto.nombre,
-				producto.descripcion,
-				producto.precio,
-				producto.stock,
+				producto.cantidad,
 				producto.imagen
 			);
 			contenedor.innerHTML += html;
