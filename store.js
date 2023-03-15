@@ -253,7 +253,6 @@ function agregarCarrito(id) {
     text: "Queres seguir comprando?",
     icon: "success",
     buttons: ["Ir al carrito", "Seguir comprando!"],
-    
   }).then((willDelete) => {
     if (willDelete) {
       actualizarVistaProductos();
@@ -266,7 +265,7 @@ function agregarCarrito(id) {
 function actualizarVistaProductos(categoria) {
   let contenedor = document.querySelector(".main-section");
   const containerCards = document.createElement("div");
-  containerCards.className = "aside-cards";
+  containerCards.className = "containerListaProductos";
   if (categoria) {
     contenedor.innerHTML = "";
     let productosCategoria = productos.filter((producto) => {
@@ -299,23 +298,18 @@ function actualizarVistaProductos(categoria) {
     }
   }
 
-  const asideElement = document.createElement("aside");
-  asideElement.className = "aside-store";
-  asideElement.innerHTML = plantillaCategoriasAside();
-
-  console.log(asideElement);
-
-  contenedor.appendChild(asideElement);
   contenedor.appendChild(containerCards);
 
   document.querySelectorAll(".categoria").forEach((item) => {
     item.addEventListener("click", (event) => {
-      actualizarVistaProductos(event.target.value);
+      console.log(event.target.getAttribute("value"))
+      actualizarVistaProductos(event.target.getAttribute("value"));
     });
   });
 
   document.querySelectorAll(".ver-detalle").forEach((item) => {
     item.addEventListener("click", (event) => {
+     
       actualizarVistaDetalle(event.target.id);
     });
   });
@@ -382,30 +376,6 @@ function actualizarVistaDetalle(numero_id) {
   contenedor.innerHTML += html;
 
   actualizarIconoCarrito();
-}
-
-function plantillaCategoriasAside() {
-  let html = `  
-  <h3 id="titulo-categoria">CATEGORIAS</h3>
-<ul class="lista-categorias">
-  <li class="categoria" id="HEROES">
-    <button href="" value="heroes">HEROES</button>
-  </li>
-  <li class="categoria" id="LLAVEROS">
-    <button href="" value="llaveros">LLAVEROS</button>
-  </li>
-  <li class="categoria" id="MACETAS">
-    <button href="" value="macetas">MACETAS</button>
-  </li>
-  <li class="categoria" id="REGALOS">
-    <button href="" value="regalos">REGALOS</button>
-  </li>
-  <li class="categoria" id="MATES">
-    <button href="" value="mates">MATES</button>
-  </li>
-</ul>
-`;
-  return html;
 }
 
 function plantillaDetalleProducto(
@@ -672,24 +642,3 @@ function plantillaProductosCarrito(titulo, cantidad, precio, imagen) {
   return html;
 }
 
-// const len = carrito.itemsCarrito.reduce((acumulador, producto) => {
-//   return acumulador + producto.precio * producto.cantidad;
-// }, 0);
-
-// console.log(len);
-
-// lista= [1,2,4,5,6,7]
-// const listanumer = lista.reduce((acumulador, Numero) => {
-//   return acumulador + Numero;
-// }, 0);
-
-// const [ uno, dos ]= carrito.itemsCarrito.map(item=> item.precio);
-
-// console.log(carrito.itemsCarrito);
-
-// const listaasd = carrito.itemsCarrito
-// console.log(carrito.itemsCarrito.filter((item) => {
-//   return item.producto_id === 0;
-// }))
-
-// carrito.itemsCarrito.forEach((item)=>console.log(item))

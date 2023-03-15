@@ -5,118 +5,56 @@
 }
 
 body {
-  height: 100%;
+  min-height: 100vh;
 }
 
-
-.boton-login a {
-  color: white;
-}
-
-
-.contenedor-iconos{
+.contenedor-iconos {
   display: flex;
 }
 
-nav ul {
-  display: flex;
-  justify-content: space-around;
-  gap: 20px;
-}
 li {
   list-style-type: none;
 }
 
-.titulo-productos {
-  width: 100;
-}
-
-.product {
-  display: flex;
-  flex-direction: column;
-  
-  height: 300px;
-  width: 250px;
-}
-
-.imagen,
-.informacion {
-  flex: 1;
-}
-.imagen {
-  overflow: hidden;
-  
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.imagen img {
-  width: 110%;
-  height: auto;
-  background-size: fit;
-}
-
-.lista_productos,
-.lista_carrito {
-  flex: 1;
-}
-
-.lista_productos {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 2em;
-  justify-content: center;
-}
-
-.lista_carrito {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 2em;
-  justify-content: center;
-}
-.agotado {
-  background-color: red;
-}
 
 
 header {
-  background-color: blue;
+ 
   display: flex;
   justify-content: space-around;
   align-items: center;
   height: 100px;
   font-size: 2em;
-
 }
 
 nav {
-  background-color: blueviolet;
+ 
   display: flex;
   justify-content: space-around;
 }
-.section-store {
-  background-color: green;
+
+.main-section {
   min-height: 85vh;
   display: flex;
-  flex-direction: column;
-  padding: 1em;
+  justify-content: center;
+  align-items: center;  
+  background-color: #eee
+}
+
+.containerListaProductos{
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
   gap: 1em;
-}
-.aside-store {
-  background-color: black;
-  height: 30vh;
-  color: white;
+  padding: 1em;
+  
 }
 
 footer {
-  background-color: red;
+  
 }
-
-
-
 
 /* --------------------------------------------------------------- */
 /* css para details.html */
@@ -171,9 +109,7 @@ text-color {
 .quantity input {
   border-radius: 0;
   height: 40px;
-
 }
-
 
 .custom-btn {
   text-transform: capitalize;
@@ -215,31 +151,16 @@ text-color {
   color: #0093c4;
 }
 
-
 /* Small devices (landscape phones, less than 768px) */
 @media (max-width: 767.98px) {
-
   /* Make preview images responsive  */
   .previews img {
-      width: 100%;
-      height: auto;
+    width: 100%;
+    height: auto;
   }
-
 }
-
 
 /* ----------------------------------------------------------- */
 /* ---------------------------------------------------------------- */
 
 /* css para carrito */
-
-.main-carrito {
-  display: grid;
-  grid-template-columns: repeat(12, [col-start] 1fr);
-  min-height: 100vh;
-  grid-gap: 5px;
-}
-
-.main-carrito> * {
-  grid-column: col-start / span 12;
-}
