@@ -250,10 +250,10 @@ function agregarCarrito(id) {
 
   swal({
     title: "Se agrego al carrito",
-    text: "Once deleted, you will not be able to recover this imaginary file!",
+    text: "Queres seguir comprando?",
     icon: "success",
-    buttons: true,
-    dangerMode: true,
+    buttons: ["Ir al carrito", "Seguir comprando!"],
+    
   }).then((willDelete) => {
     if (willDelete) {
       actualizarVistaProductos();
@@ -324,14 +324,23 @@ function actualizarVistaProductos(categoria) {
 function actualizarVistaCarrito() {
   let contenedor = document.querySelector(".main-section");
   contenedor.innerHTML = ``;
-  contenedor.innerHTML = plantillaCarritoProductos(carrito.cantidadItems(),carrito.subtotal(),carrito.total());
+  contenedor.innerHTML = plantillaCarritoProductos(
+    carrito.cantidadItems(),
+    carrito.subtotal(),
+    carrito.total()
+  );
   let rowListaProductos = document.querySelector(".lista-productos");
-  console.log(rowListaProductos);
+
   if (carrito.itemsCarrito.length > 0) {
     for (let producto of carrito.itemsCarrito) {
       const producto_detalles = document.createElement("div");
       producto_detalles.classList.add("producto", "card", "mb-3", "mb-lg-0");
-      producto_detalles.innerHTML = plantillaProductosCarrito();
+      producto_detalles.innerHTML = plantillaProductosCarrito(
+        producto.nombre,
+        producto.cantidad,
+        producto.precio,
+        producto.imagen
+      );
       rowListaProductos.appendChild(producto_detalles);
     }
   } else {
@@ -501,7 +510,7 @@ function plantillaCarritoProductos(cantidad_item, subtotal, total) {
                   >
                     <div>
                       <p class="mb-1">Carrito de compra</p>
-                      <p class="mb-0">Tienes ${cantidad_item} 5 productos en tu carrito</p>
+                      <p class="mb-0">Tienes ${cantidad_item} productos en tu carrito</p>
                     </div>
                  
                   </div>
@@ -634,26 +643,26 @@ function plantillaCarritoProductos(cantidad_item, subtotal, total) {
   return html;
 }
 
-function plantillaProductosCarrito() {
+function plantillaProductosCarrito(titulo, cantidad, precio, imagen) {
   let html = `     <div class="card-body">
   <div class="d-flex justify-content-between">
     <div class="d-flex flex-row align-items-center">
       <div>
         <img
-          src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-shopping-carts/img4.webp"
+          src="./img/${imagen}"
           class="img-fluid rounded-3" alt="Shopping item" style="width: 65px;">
       </div>
       <div class="ms-3">
-        <h5>MacBook Pro</h5>
-        <p class="small mb-0">1TB, Graphite</p>
+        <h5>${titulo}</h5>
+        
       </div>
     </div>
     <div class="d-flex flex-row align-items-center">
       <div style="width: 50px;">
-        <h5 class="fw-normal mb-0">1</h5>
+        <h5 class="fw-normal mb-0">${cantidad}</h5>
       </div>
       <div style="width: 80px;">
-        <h5 class="mb-0">$1799</h5>
+        <h5 class="mb-0">${precio}</h5>
       </div>
       <a href="#!" style="color: #cecece;"><i class="fas fa-trash-alt"></i></a>
     </div>
