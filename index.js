@@ -1,5 +1,34 @@
 const productos = [];
 
+class ClaseListaProductos {
+  constructor() {
+    this.lista = [];
+    this.agregarProducto.bind(this);
+  }
+
+  agregarProducto(
+    numero_id,
+    nombre,
+    categoria,
+    descripcion,
+    precio,
+    stock,
+    imagen
+  ) {
+    let producto = new Producto(
+      numero_id,
+      nombre,
+      categoria,
+      descripcion,
+      precio,
+      stock,
+      imagen
+    );
+    this.lista.push(producto);
+  }
+}
+const listaProductos = new ClaseListaProductos();
+
 class Producto {
   constructor(
     numero_id,
@@ -23,6 +52,54 @@ class Producto {
     this.stock = -1;
   }
 }
+
+function agregarProducto(
+  numero_id,
+  nombre,
+  categoria,
+  descripcion,
+  precio,
+  stock,
+  imagen
+) {
+  productos.push(
+    new Producto(
+      numero_id,
+      nombre,
+      categoria,
+      descripcion,
+      precio,
+      stock,
+      imagen
+    )
+  );
+}
+
+fetch("https://fakestoreapi.com/products")
+  .then((res) => res.json())
+  .then((json) =>
+    json.forEach(({ title, category, id, image, price, description }) => {
+      listaProductos.agregarProducto(
+        id,
+        title,
+        category,
+        description,
+        price,
+        Math.floor(Math.random() * 50) + 1,
+        image
+      );
+
+      agregarProducto(
+        id,
+        title,
+        category,
+        description,
+        price,
+        Math.floor(Math.random() * 50) + 1,
+        image
+      );
+    })
+  );
 
 class itemCarrito {
   constructor(producto_id, nombre, precio, cantidad, imagen) {
@@ -86,9 +163,6 @@ class Carrito {
       (item) => item.producto_id != producto_id
     );
   }
-  mostrarCarrito() {
-    return this.itemsCarrito;
-  }
 
   cantidadItems() {
     return this.itemsCarrito.length;
@@ -108,101 +182,6 @@ class Carrito {
 }
 
 const carrito = new Carrito();
-
-function agregarProducto(
-  numero_id,
-  nombre,
-  categoria,
-  descripcion,
-  precio,
-  stock,
-  imagen
-) {
-  productos.push(
-    new Producto(
-      numero_id,
-      nombre,
-      categoria,
-      descripcion,
-      precio,
-      stock,
-      imagen
-    )
-  );
-}
-
-agregarProducto(
-  0,
-  "thor",
-  "heroes",
-  "dddddddddddddrwerddddddddddd",
-  200,
-  190,
-  "imagen0.jpg"
-);
-agregarProducto(
-  1,
-  "iron man",
-  "heroes",
-  "ddddddddqwdddddddddddd",
-  300,
-  10,
-  "imagen1.jpg"
-);
-agregarProducto(
-  2,
-  "banda",
-  "llaveros",
-  "dddddddddddrddd",
-  100,
-  2,
-  "imagen2.jpg"
-);
-agregarProducto(
-  3,
-  "redonda",
-  "macetas",
-  "dddrdddddddddddddddd",
-  1200,
-  5,
-  "imagen3.jpg"
-);
-agregarProducto(
-  4,
-  "cuadrada",
-  "macetas",
-  "ddddddrdddddddrddddddddddd",
-  123,
-  7,
-  "imagen4.jpg"
-);
-agregarProducto(
-  5,
-  "algo",
-  "regalos",
-  "dddrdddddddddddd",
-  2354,
-  8,
-  "imagen5.jpg"
-);
-agregarProducto(
-  6,
-  "deadpool",
-  "mates",
-  "ddddddrdddddddd",
-  34,
-  19,
-  "imagen6.jpg"
-);
-agregarProducto(
-  7,
-  "asdfasd",
-  "mates",
-  "dddddddrddddddd",
-  666,
-  199,
-  "imagen7.jpg"
-);
 
 document.addEventListener(
   "DOMContentLoaded",
@@ -265,8 +244,9 @@ function agregarCarrito(id) {
 function actualizarVistaProductos(categoria) {
   let contenedor = document.querySelector(".main-section");
   const containerCards = document.createElement("div");
+
   containerCards.className = "containerListaProductos";
-  if (categoria) {
+  if (categoria != undefined) {
     contenedor.innerHTML = "";
     let productosCategoria = productos.filter((producto) => {
       return producto.categoria === categoria;
@@ -285,34 +265,41 @@ function actualizarVistaProductos(categoria) {
     }
   } else {
     contenedor.innerHTML = "";
-    for (let producto of productos) {
-      let html = plantillaTarjetaProducto(
-        producto.numero_id,
-        producto.nombre,
-        producto.descripcion,
-        producto.precio,
-        producto.stock,
-        producto.imagen
-      );
-      containerCards.innerHTML += html;
-    }
+
+    fetch("https://fakestoreapi.com/products")
+      .then((res) => res.json())
+      .then((json) =>
+        {json.forEach(({ title, category, id, image, price, description }) => {
+          let html = plantillaTarjetaProducto(
+            id,
+            title,
+            description,
+            price,
+            Math.floor(Math.random() * 50) + 1,
+            image
+          );
+          containerCards.innerHTML += html;
+        })
+        document.querySelectorAll(".ver-detalle").forEach((item) => {
+          item.addEventListener("click", (event) => {
+            actualizarVistaDetalle(event.target.id);
+          });
+        });}
+        
+      ).then();
+      
   }
 
   contenedor.appendChild(containerCards);
 
   document.querySelectorAll(".categoria").forEach((item) => {
     item.addEventListener("click", (event) => {
-      console.log(event.target.getAttribute("value"))
+      console.log(event.target.getAttribute("value"));
       actualizarVistaProductos(event.target.getAttribute("value"));
     });
   });
 
-  document.querySelectorAll(".ver-detalle").forEach((item) => {
-    item.addEventListener("click", (event) => {
-     
-      actualizarVistaDetalle(event.target.id);
-    });
-  });
+
 }
 
 function actualizarVistaCarrito() {
@@ -392,7 +379,7 @@ function plantillaDetalleProducto(
           <div class="row">
               <div class="col-md-5">
                   <div class="main-img">
-                      <img class="img-fluid" src="./img/${imagen}" alt="ProductS">
+                      <img class="img-fluid" src="${imagen}" alt="ProductS">
                   </div>
               </div>
               <div class="col-md-7">
@@ -444,7 +431,7 @@ function plantillaTarjetaProducto(
 ) {
   let html = `
     <div class="card" style="width: 18rem;">
-    <img class="card-img-top" src='./img/${imagen}' alt="Card image cap">
+    <img class="card-img-top" src='${imagen}' alt="Card image cap">
     <div class="card-body">
       <h5 class="card-title">${nombre}</h5>
       <p class="card-text">${descripcion}</p>
@@ -619,7 +606,7 @@ function plantillaProductosCarrito(titulo, cantidad, precio, imagen) {
     <div class="d-flex flex-row align-items-center">
       <div>
         <img
-          src="./img/${imagen}"
+          src="${imagen}"
           class="img-fluid rounded-3" alt="Shopping item" style="width: 65px;">
       </div>
       <div class="ms-3">
@@ -641,4 +628,3 @@ function plantillaProductosCarrito(titulo, cantidad, precio, imagen) {
 `;
   return html;
 }
-
