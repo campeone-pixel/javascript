@@ -1,3 +1,8 @@
+
+
+
+// creo la clase de itemCarrito para poder crear los productos que forman parte de un carrito
+
 class itemCarrito {
   constructor(producto_id, nombre, precio, cantidad, imagen) {
     this.producto_id = producto_id;
@@ -13,6 +18,7 @@ class itemCarrito {
   }
 }
 
+// creo la clase de carrito para poder agrupar los distintos productos 
 class Carrito {
   constructor(id) {
     this.id = id;
@@ -82,6 +88,8 @@ class Carrito {
   }
 }
 
+
+// Inicializo el carrito
 const carrito = new Carrito();
 
 
@@ -114,6 +122,9 @@ function actualizarIconoCarrito() {
   contenedorContador.innerText = carrito.cantidadItems();
   icon.appendChild(contenedorContador);
 }
+
+// ---------------------------------------------------
+// funciones que se disparan segun eleccion del usuario
 
 function agregarCarrito(id) {
   fetch("https://fakestoreapi.com/products")
@@ -171,6 +182,8 @@ function comprar() {
   });
 }
 
+
+
 document.addEventListener(
   "DOMContentLoaded",
   function () {
@@ -180,6 +193,9 @@ document.addEventListener(
   },
   false
 );
+
+// ---------------------------------------------------------------------------------
+// funciones para las distintas vistas
 
 function actualizarVistaProductos(categoria) {
   actualizarIconoCarrito();
@@ -312,6 +328,9 @@ function actualizarVistaDetalle(id) {
 
   actualizarIconoCarrito();
 }
+
+// ----------------------------------------------------------------------------------
+// Plantillas para las distintas vistas
 
 function plantillaDetalleProducto(
   numero_id,
