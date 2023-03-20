@@ -1,106 +1,3 @@
-const productos = [];
-
-class ClaseListaProductos {
-  constructor() {
-    this.lista = [];
-    this.agregarProducto.bind(this);
-  }
-
-  agregarProducto(
-    numero_id,
-    nombre,
-    categoria,
-    descripcion,
-    precio,
-    stock,
-    imagen
-  ) {
-    let producto = new Producto(
-      numero_id,
-      nombre,
-      categoria,
-      descripcion,
-      precio,
-      stock,
-      imagen
-    );
-    this.lista.push(producto);
-  }
-}
-const listaProductos = new ClaseListaProductos();
-
-class Producto {
-  constructor(
-    numero_id,
-    nombre,
-    categoria,
-    descripcion,
-    precio,
-    stock,
-    imagen
-  ) {
-    this.numero_id = numero_id;
-    this.nombre = nombre;
-    this.categoria = categoria;
-    this.descripcion = descripcion;
-    this.precio = precio;
-    this.stock = stock;
-    this.imagen = imagen;
-  }
-
-  restarStock() {
-    this.stock = -1;
-  }
-}
-
-function agregarProducto(
-  numero_id,
-  nombre,
-  categoria,
-  descripcion,
-  precio,
-  stock,
-  imagen
-) {
-  productos.push(
-    new Producto(
-      numero_id,
-      nombre,
-      categoria,
-      descripcion,
-      precio,
-      stock,
-      imagen
-    )
-  );
-}
-
-fetch("https://fakestoreapi.com/products")
-  .then((res) => res.json())
-  .then((json) =>
-    json.forEach(({ title, category, id, image, price, description }) => {
-      listaProductos.agregarProducto(
-        id,
-        title,
-        category,
-        description,
-        price,
-        Math.floor(Math.random() * 50) + 1,
-        image
-      );
-
-      agregarProducto(
-        id,
-        title,
-        category,
-        description,
-        price,
-        Math.floor(Math.random() * 50) + 1,
-        image
-      );
-    })
-  );
-
 class itemCarrito {
   constructor(producto_id, nombre, precio, cantidad, imagen) {
     this.producto_id = producto_id;
@@ -141,7 +38,7 @@ class Carrito {
         return item.producto_id === itemCarrito.producto_id;
       });
 
-      item[0].actualizarCantidad(1);
+      item[0].actualizarCantidad(itemCarrito.cantidad);
       let json = JSON.stringify(carrito.itemsCarrito);
 
       localStorage.setItem("carrito", json);
@@ -179,19 +76,15 @@ class Carrito {
       return acumulador + producto.precio * producto.cantidad;
     }, 20);
   }
+
+  vaciarCarrito(){
+    this.itemsCarrito = []
+  }
 }
 
 const carrito = new Carrito();
 
-document.addEventListener(
-  "DOMContentLoaded",
-  function () {
-    actualizarVistaProductos();
-    copiarCarritoLocal();
-    actualizarIconoCarrito();
-  },
-  false
-);
+
 
 function copiarCarritoLocal() {
   let carritoLS = localStorage.getItem("carrito");
@@ -214,92 +107,145 @@ function copiarCarritoLocal() {
   }
 }
 
+function actualizarIconoCarrito() {
+  icon = document.querySelector(".icono-carrito");
+  icon.removeChild(icon.lastChild);
+  contenedorContador = document.createElement("span");
+  contenedorContador.innerText = carrito.cantidadItems();
+  icon.appendChild(contenedorContador);
+}
+
 function agregarCarrito(id) {
-  let productoAgregar = productos.filter((producto) => {
-    return producto.numero_id === id;
-  });
+  fetch("https://fakestoreapi.com/products")
+    .then((res) => res.json())
+    .then((json) => {
+      const {
+        id: producto_id,
+        title,
+        category,
+        description,
+        price,
+        image,
+      } = json.find((producto) => {
+        return producto.id === Number(id);
+      });
 
-  let { numero_id, nombre, precio, imagen } = productoAgregar[0];
+      const cantidad = Number(document.getElementById("cart_quantity").value);
+      console.log(cantidad);
+      let item = new itemCarrito(producto_id, title, price, cantidad, image);
 
-  let item = new itemCarrito(numero_id, nombre, precio, 1, imagen);
+      carrito.agregarItem(item);
+      actualizarIconoCarrito();
+      actualizarVistaDetalle(id);
 
-  carrito.agregarItem(item);
-  actualizarIconoCarrito();
-  actualizarVistaDetalle(id);
+      swal({
+        title: "Se agrego al carrito",
+        text: "Queres seguir comprando?",
+        icon: "success",
+        buttons: ["Ir al carrito", "Seguir comprando!"],
+      }).then((willDelete) => {
+        if (willDelete) {
+          actualizarVistaProductos();
+        } else {
+          actualizarVistaCarrito();
+        }
+      });
+    });
+}
 
+function comprar() {
   swal({
-    title: "Se agrego al carrito",
-    text: "Queres seguir comprando?",
+    title: "Se realizo la compra con exito",
+
     icon: "success",
-    buttons: ["Ir al carrito", "Seguir comprando!"],
-  }).then((willDelete) => {
-    if (willDelete) {
+    button: "Volver al Ecommerce",
+  }).then((volver) => {
+    if (volver) {
+      localStorage.clear();
+      carrito.vaciarCarrito()
+      actualizarIconoCarrito();
       actualizarVistaProductos();
+      
     } else {
-      actualizarVistaCarrito();
     }
   });
 }
 
+document.addEventListener(
+  "DOMContentLoaded",
+  function () {
+    actualizarVistaProductos();
+    copiarCarritoLocal();
+    actualizarIconoCarrito();
+  },
+  false
+);
+
 function actualizarVistaProductos(categoria) {
+  actualizarIconoCarrito();
+
   let contenedor = document.querySelector(".main-section");
   const containerCards = document.createElement("div");
 
   containerCards.className = "containerListaProductos";
   if (categoria != undefined) {
     contenedor.innerHTML = "";
-    let productosCategoria = productos.filter((producto) => {
-      return producto.categoria === categoria;
-    });
+    fetch("https://fakestoreapi.com/products")
+      .then((res) => res.json())
+      .then((json) => {
+        const listaProductos = json.filter((producto) => {
+          return producto.category === categoria;
+        });
 
-    for (let producto of productosCategoria) {
-      let html = plantillaTarjetaProducto(
-        producto.numero_id,
-        producto.nombre,
-        producto.descripcion,
-        producto.precio,
-        producto.stock,
-        producto.imagen
-      );
-      containerCards.innerHTML += html;
-    }
+        listaProductos.forEach(
+          ({ title, category, id, image, price, description }) => {
+            let html = plantillaTarjetaProducto(
+              id,
+              title,
+              description,
+              price,
+              image
+            );
+            containerCards.innerHTML += html;
+          }
+        );
+        document.querySelectorAll(".ver-detalle").forEach((item) => {
+          item.addEventListener("click", (event) => {
+            actualizarVistaDetalle(event.target.id);
+          });
+        });
+      });
   } else {
     contenedor.innerHTML = "";
 
     fetch("https://fakestoreapi.com/products")
       .then((res) => res.json())
-      .then((json) =>
-        {json.forEach(({ title, category, id, image, price, description }) => {
+      .then((json) => {
+        json.forEach(({ title, category, id, image, price, description }) => {
           let html = plantillaTarjetaProducto(
             id,
             title,
             description,
             price,
-            Math.floor(Math.random() * 50) + 1,
             image
           );
           containerCards.innerHTML += html;
-        })
+        });
         document.querySelectorAll(".ver-detalle").forEach((item) => {
           item.addEventListener("click", (event) => {
             actualizarVistaDetalle(event.target.id);
           });
-        });}
-        
-      ).then();
-      
+        });
+      });
   }
 
   contenedor.appendChild(containerCards);
 
   document.querySelectorAll(".categoria").forEach((item) => {
     item.addEventListener("click", (event) => {
-      console.log(event.target.getAttribute("value"));
       actualizarVistaProductos(event.target.getAttribute("value"));
     });
   });
-
-
 }
 
 function actualizarVistaCarrito() {
@@ -334,33 +280,35 @@ function actualizarVistaCarrito() {
   actualizarIconoCarrito();
 }
 
-function actualizarIconoCarrito() {
-  icon = document.querySelector(".icono-carrito");
-  icon.removeChild(icon.lastChild);
-  contenedorContador = document.createElement("span");
-  contenedorContador.innerText = carrito.cantidadItems();
-  icon.appendChild(contenedorContador);
-}
-
-function actualizarVistaDetalle(numero_id) {
+function actualizarVistaDetalle(id) {
   let contenedor = document.querySelector(".main-section");
   contenedor.innerHTML = ``;
 
-  let producto = productos.filter((producto) => {
-    return producto.numero_id === Number(numero_id);
-  })[0];
+  fetch("https://fakestoreapi.com/products")
+    .then((res) => res.json())
+    .then((json) => {
+      const {
+        id: numero_id,
+        title: nombre,
+        category: categoria,
+        description: descripcion,
+        price: precio,
+        image: imagen,
+      } = json.find((producto) => {
+        return producto.id === Number(id);
+      });
 
-  let html = plantillaDetalleProducto(
-    producto.numero_id,
-    producto.nombre,
-    producto.categoria,
-    producto.descripcion,
-    producto.precio,
-    producto.stock,
-    producto.imagen
-  );
+      let html = plantillaDetalleProducto(
+        numero_id,
+        nombre,
+        categoria,
+        descripcion,
+        precio,
+        imagen
+      );
 
-  contenedor.innerHTML += html;
+      contenedor.innerHTML += html;
+    });
 
   actualizarIconoCarrito();
 }
@@ -371,7 +319,6 @@ function plantillaDetalleProducto(
   categoria,
   descripcion,
   precio,
-  stock,
   imagen
 ) {
   let html = `      <section class="section-details">
@@ -392,8 +339,10 @@ function plantillaDetalleProducto(
                       </div>
                       <div class="price-area my-4">
                           
-                          <p class="new-price text-bold mb-1"> Precio: ${precio}</p>
-                          <p class="new-price text-bold mb-1"> Stock: ${stock}</p>
+                          <p class="new-price text-bold mb-1"> Precio: ${precio.toFixed(
+                            2
+                          )}</p>
+                          
                        
   
                       </div>
@@ -404,7 +353,7 @@ function plantillaDetalleProducto(
                           </div>
   
                           <div class="block quantity">
-                              <input type="number" class="form-control" id="cart_quantity" value="1" min="0" max=${stock} placeholder="Enter email" name="cart_quantity">
+                              <input type="number" class="form-control" id="cart_quantity" value="1" min="0"  placeholder="Enter email" name="cart_quantity">
                           </div>
                       </div>
                   </div>
@@ -423,10 +372,8 @@ function plantillaDetalleProducto(
 function plantillaTarjetaProducto(
   numero_id,
   nombre,
-
   descripcion,
   precio,
-  stock,
   imagen
 ) {
   let html = `
@@ -435,8 +382,8 @@ function plantillaTarjetaProducto(
     <div class="card-body">
       <h5 class="card-title">${nombre}</h5>
       <p class="card-text">${descripcion}</p>
-      <div class="precio">Precio: ${precio}</div>
-      <div class="stock">Stock: ${stock}</div>
+      <div class="precio">Precio: ${precio.toFixed(2)}</div>
+      
          
       <a href="#" class="ver-detalle btn btn-primary" id= ${numero_id} >VER DETALLE</a>
     </div>
@@ -457,7 +404,7 @@ function plantillaCarritoProductos(cantidad_item, subtotal, total) {
                 <div  class="col-lg-7 lista-productos">
                   <h5 class="mb-3">
                     <a href="#!" class="text-body"
-                      ><i class="fas fa-long-arrow-alt-left me-2"></i>Continuar comprando</a
+                    onClick=actualizarVistaProductos()><i class="fas fa-long-arrow-alt-left me-2" ></i>Continuar comprando</a
                     >
                   </h5>
                   <hr />
@@ -564,7 +511,7 @@ function plantillaCarritoProductos(cantidad_item, subtotal, total) {
   
                       <div class="d-flex justify-content-between">
                         <p class="mb-2">Subtotal</p>
-                        <p class="mb-2">${subtotal}</p>
+                        <p class="mb-2">${subtotal.toFixed(2)}</p>
                       </div>
   
                       <div class="d-flex justify-content-between">
@@ -574,14 +521,15 @@ function plantillaCarritoProductos(cantidad_item, subtotal, total) {
   
                       <div class="d-flex justify-content-between mb-4">
                         <p class="mb-2">Total(Incl. taxes)</p>
-                        <p class="mb-2">${total}</p>
+                        <p class="mb-2">${total.toFixed(2)}</p>
                       </div>
   
-                      <button type="button" class="btn btn-info btn-block btn-lg">
+                      <button type="button" onClick=comprar() class="btn btn-info btn-block btn-lg">
                         <div class="d-flex justify-content-between">
-                          <span>${total}</span>
+                          <span>${total.toFixed(2)} </span>
+                          &nbsp;
                           <span
-                            >Checkout
+                            > Pagar
                             <i class="fas fa-long-arrow-alt-right ms-2"></i
                           ></span>
                         </div>
@@ -619,7 +567,7 @@ function plantillaProductosCarrito(titulo, cantidad, precio, imagen) {
         <h5 class="fw-normal mb-0">${cantidad}</h5>
       </div>
       <div style="width: 80px;">
-        <h5 class="mb-0">${precio}</h5>
+        <h5 class="mb-0">${precio.toFixed(2)}</h5>
       </div>
       <a href="#!" style="color: #cecece;"><i class="fas fa-trash-alt"></i></a>
     </div>
