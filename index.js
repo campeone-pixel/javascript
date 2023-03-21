@@ -214,11 +214,11 @@ function actualizarVistaProductos(categoria) {
         });
 
         listaProductos.forEach(
-          ({ title, category, id, image, price, description }) => {
+          ({ title, category, id, image, price }) => {
             let html = plantillaTarjetaProducto(
               id,
               title,
-              description,
+              
               price,
               image
             );
@@ -237,11 +237,11 @@ function actualizarVistaProductos(categoria) {
     fetch("https://fakestoreapi.com/products")
       .then((res) => res.json())
       .then((json) => {
-        json.forEach(({ title, category, id, image, price, description }) => {
+        json.forEach(({ title, category, id, image, price }) => {
           let html = plantillaTarjetaProducto(
             id,
             title,
-            description,
+           
             price,
             image
           );
@@ -391,16 +391,19 @@ function plantillaDetalleProducto(
 function plantillaTarjetaProducto(
   numero_id,
   nombre,
-  descripcion,
+  
   precio,
   imagen
 ) {
   let html = `
-    <div class="card" style="width: 18rem;">
-    <img class="card-img-top" src='${imagen}' alt="Card image cap">
+    <div class="card productosLista" style="width: 18rem;">
+    <div class="card-img-top">
+    <img  class="imagenProducto" src='${imagen}' alt="Card image cap">
+    </div>
     <div class="card-body">
       <h5 class="card-title">${nombre}</h5>
-      <p class="card-text">${descripcion}</p>
+     
+      
       <div class="precio">Precio: ${precio.toFixed(2)}</div>
       
          

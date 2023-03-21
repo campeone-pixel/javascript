@@ -52,8 +52,24 @@ nav {
   
 }
 
-footer {
+.card-img-top {
+ 
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.imagenProducto{
+  height: 100px;
+  width: auto;
   
+}
+.card.productosLista{
+  height: 300px;
+  width: 200px;
 }
 
 /* --------------------------------------------------------------- */
